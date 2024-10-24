@@ -1,0 +1,420 @@
+@page
+@model StudentManagement.Pages.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<style>
+    .students-list {
+        display: flex;
+        flex-wrap: wrap; /* Cards will wrap to the next line if no space is available */
+        gap: 0px;
+    }
+
+    .student-item {
+        display:inline-block;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        flex-basis: 30%; /* Cards will take up 30% of the width */
+        min-width: 250px; /* Minimum width to prevent cards from getting too small */
+        box-sizing: border-box; /* Include padding and border in width calculations */
+    }
+
+    .student-info {
+        flex: 1;
+        margin-right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .student-image {
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center; /* Center the image horizontally */
+        align-items: center; /* Center the image vertically */
+    }
+
+    .student-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+</style>
+
+
+
+
+
+<div class="d-flex justify-content-between align-items-center">
+    <h4 class="mb-0 mt-2">Student Lists</h4>
+    <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target="#createStudentModal">
+        <i class="fas fa-user-plus"></i> Add Student
+    </button>
+</div>
+
+<div class="students-list mt-3">
+    @if (Model.Student != null && Model.Student.Any())
+    {
+        @foreach (var student in Model.Student)
+        {
+            <div class="student-item ms-3">
+                    <!-- Separate div for the profile image -->
+                    <div class="student-image center">
+                    <img src="data:image/png;base64,@Convert.ToBase64String(student.ImageData)" width="150" height="150" class="rounded-circle" />
+                    </div>
+                    <!-- Student details -->
+                    <div class="student-info">
+                        <h4>@student.Name</h4>
+                        <p>Email: @student.Email</p>
+                        <p>Phone: @student.Phone</p>
+                        <p>Enroll Number: @student.EnrollNumber</p>
+                        <p>Date of Admission: @student.DateOfAdmission.ToString("MM/dd/yyyy")</p>
+                    </div>
+                <!-- Actions div for Edit, Details, and Delete buttons -->
+                <div class="student-actions">
+                    <button type="button" class="btn btn-primary btn-sm" title="Edit" data-toggle="modal" data-target="#editStudentModal" data-id="@student.Id">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button type="button" title="Details" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#studentDetailsModal" data-id="@student.Id">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <a asp-page="Delete" asp-route-id="@student.Id" class="btn btn-danger btn-sm" title="Delete"
+                       data-id="@student.Id"
+                       data-enroll-number="@student.EnrollNumber"
+                       data-name="@student.Name"
+                       data-toggle="modal"
+                       data-target="#deleteStudentModal">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No students found.</p>
+    }
+</div>
+
+
+<nav aria-label="Page navigation example" >
+    <ul class="pagination justify-content-center">
+        <li class="page-item active">
+            <span class="page-link">
+                1
+                <span class="sr-only">(current)</span>
+            </span>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+        </li>
+
+    </ul>
+</nav>
+
+
+
+<!-- Create Student Modal -->
+<div class="modal fade" id="createStudentModal" tabindex="-1" role="dialog" aria-labelledby="createStudentModalLabel" aria-hidden="true">
+       <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createStudentModalLabel">Create Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" asp-page-handler="CreateStudent" enctype="multipart/form-data">
+
+                    <div class="form-group">
+                        <label asp-for="StudentDto.Name"></label>
+                        <input asp-for="StudentDto.Name" class="form-control" />
+                        <span asp-validation-for="StudentDto.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StudentDto.Email"></label>
+                        <input asp-for="StudentDto.Email" class="form-control" />
+                        <span asp-validation-for="StudentDto.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StudentDto.Phone"></label>
+                        <input asp-for="StudentDto.Phone" class="form-control" />
+                        <span asp-validation-for="StudentDto.Phone" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="StudentDto.ImageFile"></label>
+                        <input asp-for="StudentDto.ImageFile" class="form-control" type="file" />
+                        <span asp-validation-for="StudentDto.ImageFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Create Student</button>
+                    </div>
+                    @if (Model.errorMessage.Length > 0)
+                    {
+                        <div class='alert alert-warning alert-dismissible fade show" role="alert'>
+                            <strong>@Model.errorMessage</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    else if (Model.successMessage.Length > 0)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>@Model.successMessage</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="studentDetailsModal" tabindex="-1" role="dialog" aria-labelledby="studentDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="studentDetailsModalLabel">Student Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Display student details here -->
+                <dl class="row">
+                    <dt class="col-sm-4">Profile Picture</dt>
+                    <dd class="col-sm-8">
+                        <img id="studentImage" src="" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 100px; max-height: 100px;" />
+                    </dd>
+                    <dt class="col-sm-4">Name</dt>
+                    <dd class="col-sm-8" id="studentName"></dd>
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8" id="studentEmail"></dd>
+                    <dt class="col-sm-4">Phone</dt>
+                    <dd class="col-sm-8" id="studentPhone"></dd>
+                    <dt class="col-sm-4">Enroll Number</dt>
+                    <dd class="col-sm-8" id="studentEnrollNumber"></dd>
+                    <dt class="col-sm-4">Date of Admission</dt>
+                    <dd class="col-sm-8" id="studentDateOfAdmission"></dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Delete Student Modal -->
+<div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="deleteStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteStudentModalLabel">Delete Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 5px;">
+                Are you sure you want to delete the student?
+                <div class="mt-3" >
+                    <strong>Name:</strong> <span id="deleteStudentName"></span><br>
+                    <strong>Enrollment Number:</strong> <span id="deleteStudentEnrollNumber"></span><br>
+                    <strong>ID:</strong> <span id="deleteStudentId"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="studentId" />
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Edit Student Modal -->
+<div class="modal fade" id="editStudentModal" tabindex="-1" role="dialog" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editStudentForm" method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="editStudentId" name="StudentDto.Id" /> <!-- Hidden input for Id -->
+                    <div class="form-group">
+                        <label for="editStudentName">Name</label>
+                        <input type="text" class="form-control" id="editStudentName" name="StudentDto.Name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editStudentEmail">Email</label>
+                        <input type="email" class="form-control" id="editStudentEmail" name="StudentDto.Email" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editStudentPhone">Phone</label>
+                        <input type="text" class="form-control" id="editStudentPhone" name="StudentDto.Phone" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editStudentImage">Image</label>
+                        <input type="file" class="form-control" id="editStudentImage" name="StudentDto.ImageFile" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Handle the details modal display
+        $('.btn-primary[data-toggle="modal"]').click(function () {
+            var studentId = $(this).data('id'); // Get the student ID
+
+            $.ajax({
+                url: '/Index?handler=Details', // Correct route for fetching student details
+                type: 'GET',
+                data: { id: studentId },
+                success: function (data) {
+                    $('#studentName').text(data.name);
+                    $('#studentEmail').text(data.email);
+                    $('#studentPhone').text(data.phone);
+                    $('#studentEnrollNumber').text(data.enrollNumber);
+                    $('#studentDateOfAdmission').text(data.dateOfAdmission);
+
+                    // If the image data is available, set the image src to the base64 string
+                    if (data.imageDataUrl) {
+                        $('#studentImage').attr('src', data.imageDataUrl);
+                    } else {
+                        // Use a placeholder image if no image is available
+                        $('#studentImage').attr('src', '/default-profile.png');
+                    }
+                }
+            });
+        });
+
+        // Handle the delete button click event to show student info in delete modal
+        $('.btn-danger[data-toggle="modal"]').click(function () {
+            var studentId = $(this).data('id');
+            var studentName = $(this).data('name');
+            var enrollNumber = $(this).data('enroll-number');
+
+            // Set the values in the delete confirmation modal
+            $('#studentId').val(studentId);
+            $('#deleteStudentName').text(studentName);
+            $('#deleteStudentEnrollNumber').text(enrollNumber);
+            $('#deleteStudentId').text(studentId);
+        });
+
+        // Handle the confirm delete button click
+        $('#confirmDeleteButton').click(function () {
+            var studentId = $('#studentId').val();
+            $.ajax({
+                url: '/Index?handler=Delete',
+                type: 'POST',
+                data: JSON.stringify(studentId),  // Send just the ID
+                contentType: 'application/json',
+                headers: {
+                    "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $('#deleteStudentModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", xhr.status, xhr.statusText);
+                    alert("There was an error deleting the student. Please check the console for details.");
+                }
+            });
+        });
+
+        // Handle clicking the edit button
+        $('button[data-target="#editStudentModal"]').click(function () {
+            var studentId = $(this).data('id'); // Get the student ID from the button
+
+            $.ajax({
+                url: '/Index?handler=Details', // Correct route to fetch student details
+                type: 'GET',
+                data: { id: studentId },
+                success: function (data) {
+                    // Populate the edit modal with student details
+                    $('#editStudentId').val(studentId);
+                    $('#editStudentName').val(data.name);
+                    $('#editStudentEmail').val(data.email);
+                    $('#editStudentPhone').val(data.phone);
+
+                    // Set the current student image
+                    if (data.imageDataUrl) {
+                        $('#currentStudentImage').attr('src', data.imageDataUrl);
+                    } else {
+                        $('#currentStudentImage').attr('src', '/default-profile.png');
+                    }
+                }
+            });
+        });
+
+        // Handle form submission for updating student details
+        $('#editStudentForm').submit(function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: '/Index?handler=EditStudent', // Ensure the URL matches your C# method
+                type: 'POST',
+                data: new FormData(this),
+                contentType: false,
+                processData: false,
+                success: function () {
+                    alert('Student details updated successfully!');
+                    $('#editStudentModal').modal('hide');
+                    location.reload(); // Reload the page to reflect changes
+                },
+                error: function () {
+                    alert('Failed to update student details.');
+                }
+            });
+        });
+    });
+</script>
+
+<!-- Include jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+}
+
