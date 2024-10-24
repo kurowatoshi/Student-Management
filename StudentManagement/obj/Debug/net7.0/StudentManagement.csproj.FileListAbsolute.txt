@@ -504,3 +504,4 @@ C:\Users\Admin\source\repos\StudentManagement\StudentManagement\obj\Debug\net7.0
 C:\Users\Admin\source\repos\StudentManagement\StudentManagement\obj\Debug\net7.0\StudentManagement.pdb
 C:\Users\Admin\source\repos\StudentManagement\StudentManagement\obj\Debug\net7.0\StudentManagement.genruntimeconfig.cache
 C:\Users\Admin\source\repos\StudentManagement\StudentManagement\obj\Debug\net7.0\ref\StudentManagement.dll
+C:\Users\Admin\source\repos\StudentManagement\StudentManagement\obj\Debug\net7.0\StudentManagement.sourcelink.json

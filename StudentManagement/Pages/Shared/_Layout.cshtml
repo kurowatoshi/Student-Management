@@ -10,70 +10,71 @@
 
     <style>
         body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa;
-}
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            overflow: hidden;
+        }
 
-.d-flex {
-    display: flex;
-    min-height: 100vh; /* Makes sure the entire wrapper takes up the full height */
-}
+        .d-flex {
+            display: flex;
+            min-height: 100vh; /* Makes sure the entire wrapper takes up the full height */
+        }
 
-.sidebar {
-    background-color: #0d6efd;
-    color: white;
-    width: 44vh;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Ensures sidebar spans full height */
-    padding-bottom: 1rem;
-}
+        .sidebar {
+            background-color: #0d6efd;
+            color: white;
+            width: 44vh;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensures sidebar spans full height */
+            padding-bottom: 1rem;
+        }
 
-.sidebar h5, .sidebar p {
-    margin: 0;
-}
+            .sidebar h5, .sidebar p {
+                margin: 0;
+            }
 
-.sidebar a {
-    text-decoration: none;
-    color: white;
-    padding: 10px 20px;
-    transition: background-color 0.2s, color 0.2s;
-}
+            .sidebar a {
+                text-decoration: none;
+                color: white;
+                padding: 10px 20px;
+                transition: background-color 0.2s, color 0.2s;
+            }
 
-.sidebar a:hover {
-    background-color: #495057;
-    color: #fff;
-}
+                .sidebar a:hover {
+                    background-color: #024dbc;
+                    color: #fff;
+                }
 
-#page-content-wrapper {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    background-color: #ffffff;
-}
+        #page-content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: white !important;
+            padding: 10px;
+        }
 
-header.border-bottom {
-    background-color: white;
-    border-color: white;
-}
+        header.border-bottom {
+            background-color: white;
+            border-color: white;
+        }
 
-main.container-fluid {
-    flex-grow: 1;
-    padding: 2rem;
-    background-color: #f8f9fa;
-}
-
+        main.container-fluid {
+            flex-grow: 1;
+            padding: 2rem;
+            background-color: white;
+        }
     </style>
 </head>
 <body>
     <div class="d-flex">
         <div class="sidebar p-4 mb-1">
             <div class="text-center mb-2 mt-1">
-                <img src="~/images/admin.png" alt="Profile Picture" width="120" height="90" class="img-fluid rounded-circle mb-2">
-                <h5>Mr.Quiros </h5>
+                <img style="padding-top: 90px;" src="~/images/admin.png" alt="Profile Picture" width="120" height="90" class="img-fluid rounded-circle mb-2">
+                <h5>Mr. Quiros</h5>
                 <p class="text">Admin</p>
             </div>
             <ul class="list-unstyled mt-2">
@@ -89,9 +90,9 @@ main.container-fluid {
 
         <!-- Page Content -->
         <div id="page-content-wrapper" class="flex-grow-1">
-            <header class="border-bottom" style="background-color: white; border-color: white;">
-                <div class="container-fluid py-3">
-                    <h2 class="h3 mb-0 mt-4 text-center" s>Student Management</h2>
+            <header class="border-bottom">
+                <div class="container-fluid py-3" style="background-color: transparent !important;">
+                    <h2 class="h3 mb-0 mt-4 text-center">Student Management</h2>
                 </div>
             </header>
             <main class="container-fluid py-4">

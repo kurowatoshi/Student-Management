@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,26 +38,27 @@ namespace StudentManagement.Pages
             }
         }
 
-        public async Task<IActionResult> OnPostDeleteAsync([FromBody] int id)
-        {
-            if (id == 0)
-            {
-                return BadRequest("Invalid student ID");
-            }
+		public async Task<IActionResult> OnPostDeleteAsync([FromBody] int id)
+		{
+			if (id == 0)
+			{
+				return BadRequest("Invalid student ID");
+			}
 
-            var student = await context.Students.FindAsync(id);
-            if (student == null)
-            {
-                return NotFound($"Student with ID {id} not found");
-            }
+			var student = await context.Students.FindAsync(id);
+			if (student == null)
+			{
+				return NotFound($"Student with ID {id} not found");
+			}
 
-            context.Students.Remove(student);
-            await context.SaveChangesAsync();
+			context.Students.Remove(student);
+			await context.SaveChangesAsync();
 
-            return new JsonResult(new { success = true, message = "Student deleted successfully." });
-        }
+			return new JsonResult(new { success = true, message = "Student deleted successfully." });
+		}
 
-        public async Task<IActionResult> OnGetDetailsAsync(int id)
+
+		public async Task<IActionResult> OnGetDetailsAsync(int id)
         {
             var student = await context.Students.FindAsync(id);
             if (student == null)
